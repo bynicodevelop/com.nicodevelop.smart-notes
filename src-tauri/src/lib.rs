@@ -1,3 +1,5 @@
+mod database;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -11,6 +13,12 @@ pub fn run() {
                         .build(),
                 )?;
             }
+
+            match database::init_database() {
+                Ok(_) => log::info!("Database initialized successfully"),
+                Err(e) => log::error!("Failed to initialize database: {}", e),
+            }
+
             Ok(())
         })
         .run(tauri::generate_context!())
